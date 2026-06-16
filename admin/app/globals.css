@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800;
+  }
+}
+
+@layer components {
+  .skeleton {
+    @apply animate-pulse bg-slate-200 rounded-xl;
+  }
+  .card {
+    @apply bg-white rounded-2xl border border-slate-200 shadow-sm;
+  }
+  .btn-primary {
+    @apply bg-foret text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-foret/90 transition-colors;
+  }
+  .btn-danger {
+    @apply bg-red-100 text-red-700 px-4 py-2 rounded-xl text-sm font-medium hover:bg-red-200 transition-colors;
+  }
+  .badge {
+    @apply text-xs px-2.5 py-0.5 rounded-full font-medium;
+  }
+}

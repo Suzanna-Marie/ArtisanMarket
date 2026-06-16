@@ -1,0 +1,293 @@
+ARTISANMARKET
+Plateforme de digitalisation de la vente et de valorisation de l'artisanat béninois
+
+Version       : 1.0 — 2026
+Sujet         : Mémoire de Licence Professionnelle 2025 – 2026
+Étudiantes    : ABOUTA Gloria / DOGNON Marie-Suzanne
+Encadrant     : Maître de mémoire — IUT Parakou
+Structure     : Institut Universitaire de Technologie – Université de Parakou, Bénin
+Niveau        : Licence 3 – Informatique de Gestion | IUT Parakou | 2025
+
+================================================================================
+TABLE DES MATIÈRES
+================================================================================
+
+Introduction
+1. Présentation du projet
+   1.1 Contexte
+   1.2 Analyse de l'existant
+   1.3 Solution proposée
+   1.4 Problématique
+   1.5 Objectifs
+2. Périmètre fonctionnel
+3. Acteurs du système
+4. Fonctionnalités du système
+5. Étude de l'existant
+6. Architecture technique
+7. Sécurité du système
+8. Modèle économique
+9. Planning de réalisation
+10. Résultats attendus
+11. Livrables
+12. Contraintes
+Conclusion
+
+================================================================================
+INTRODUCTION
+================================================================================
+
+Avec l'évolution du numérique, de nombreux secteurs utilisent les technologies digitales pour
+améliorer leurs services et leurs ventes. Cependant, au Bénin, les artisans spécialisés dans le
+kanvô, le pagne tissé, les tenues tricotées et les accessoires artisanaux rencontrent encore des
+difficultés pour promouvoir et vendre leurs produits à grande échelle.
+
+Dans ce contexte, le projet ArtisanMarket propose la conception d'une plateforme numérique
+de vente et de valorisation de l'artisanat béninois. Elle permettra aux artisans de publier leurs
+produits en ligne et aux clients de consulter, commander et personnaliser les articles à distance.
+
+================================================================================
+1. PRÉSENTATION DU PROJET
+================================================================================
+
+1.1 Contexte
+------------
+Dans plusieurs régions du Bénin et d'Afrique, les artisans tisserands et tricoteurs disposent
+d'un important savoir-faire culturel et artistique mais font face à plusieurs difficultés liées à
+leur activité dans un contexte encore peu digitalisé, notamment :
+
+  - manque de visibilité de leurs produits malgré leur qualité
+  - difficulté à atteindre des clients éloignés ou hors localité
+  - faible utilisation des outils numériques dans leurs activités
+  - diminution des ventes locales face à la concurrence informelle
+  - absence de plateforme spécialisée dans l'artisanat textile et culturel béninois
+  - ventes principalement réalisées dans les marchés physiques
+  - utilisation informelle de WhatsApp et Facebook pour les commandes
+  - absence de centralisation des artisans et de leurs produits
+  - faible visibilité nationale et internationale des produits artisanaux
+  - difficulté de promotion des accessoires traditionnels (bijoux, sacs, objets culturels,
+    décorations, etc.)
+
+1.2 Analyse de l'existant
+--------------------------
+Plateformes et pratiques existantes :
+  - Marketplaces généralistes (e-commerce africain et international)
+  - Ventes via réseaux sociaux (WhatsApp, Facebook)
+  - Sites isolés d'artisans
+
+Limites :
+  - Absence de plateforme spécialisée dans l'artisanat béninois
+  - Manque de centralisation des artisans
+  - Commande personnalisée non structurée
+  - Faible valorisation du patrimoine culturel
+  - Interfaces souvent complexes ou non adaptées au contexte local
+
+1.3 Solution proposée
+----------------------
+Le projet ArtisanMarket propose une plateforme web spécialisée dans l'artisanat béninois.
+Elle permet :
+
+  Centralisation des artisans  : Chaque artisan dispose d'une boutique en ligne pour gérer
+                                   ses produits.
+  Vente artisanale             : Kanvô (pagne tissé béninois), tenues traditionnelles,
+                                   tenues tricotées (crochet), accessoires artisanaux.
+  Commande personnalisée       : Les clients peuvent demander des produits sur mesure :
+                                   motifs, couleurs, tailles, styles spécifiques.
+  Valorisation culturelle      : La plateforme met en avant le patrimoine artisanal béninois
+                                   et ses créateurs.
+
+1.4 Problématique
+------------------
+Comment concevoir une plateforme numérique permettant de centraliser, structurer
+et valoriser les produits artisanaux béninois tout en facilitant la mise en relation entre
+artisans et clients ?
+
+1.5 Objectifs
+--------------
+1.5.1 Objectif général
+  Développer une plateforme web de vente et de valorisation de l'artisanat béninois.
+
+1.5.2 Objectifs spécifiques
+  - Digitaliser le commerce artisanal
+  - Centraliser les artisans du Bénin
+  - Faciliter les commandes standards et personnalisées
+  - Améliorer la visibilité des produits
+  - Structurer les échanges artisan-client
+  - Promouvoir le kanvô et les accessoires traditionnels
+  - Permettre les paiements électroniques
+
+================================================================================
+2. PÉRIMÈTRE FONCTIONNEL
+================================================================================
+
+2.1 Produits concernés
+  - Kanvô (pagne tissé béninois)
+  - Tenues cousues traditionnelles
+  - Tenues tricotées
+  - Accessoires artisanaux
+
+2.2 Fonctionnalités incluses
+  - Gestion utilisateurs (client / artisan / admin)
+  - Création de boutiques artisans
+  - Gestion des produits
+  - Catalogue en ligne
+  - Recherche et filtrage
+  - Commande standard
+  - Commande personnalisée
+  - Gestion des commandes
+
+2.3 Hors périmètre
+  - Production industrielle textile
+  - Importation de produits étrangers
+  - Système bancaire complexe
+  - Logistique avancée de livraison
+
+================================================================================
+3. ACTEURS DU SYSTÈME
+================================================================================
+
+Acteur          | Rôle                    | Fonctions principales
+----------------|-------------------------|----------------------------------------------
+Client          | Consommateur final      | Consulter, commander, personnaliser, payer
+Artisan         | Vendeur/Créateur        | Créer boutique, publier produits, gérer
+                |                         | commandes, répondre aux clients
+Administrateur  | Gestionnaire plateforme | Gérer utilisateurs, valider contenus,
+                |                         | superviser la plateforme
+
+================================================================================
+4. FONCTIONNALITÉS DU SYSTÈME
+================================================================================
+
+4.1 Fonctionnalités principales
+
+Étape 1 — Inscription
+  Les artisans et clients créent leurs comptes sur la plateforme.
+
+Étape 2 — Publication des produits
+  Les artisans ajoutent des photos, descriptions, prix et quantités disponibles.
+
+Étape 3 — Consultation des produits
+  Les clients parcourent les catégories, produits populaires, nouveautés et peuvent
+  demander une commande personnalisée.
+
+Étape 4 — Commande
+  Le client ajoute les produits au panier, valide la commande et choisit un mode de paiement.
+
+Étape 5 — Livraison
+  L'artisan prépare la commande et la livraison est effectuée.
+
+4.2 Fonctionnalités secondaires
+  - Favoris
+  - Notifications
+  - Statistiques simples
+
+================================================================================
+5. ÉTUDE DE L'EXISTANT
+================================================================================
+
+5.1 Solutions existantes
+  - Marketplaces généralistes
+  - Ventes via WhatsApp / Facebook
+  - Sites individuels d'artisans
+
+5.2 Limites
+  - Absence de spécialisation artisanale béninoise
+  - Manque de centralisation
+  - Personnalisation non structurée
+  - Faible valorisation culturelle
+  - Manque d'adaptation locale
+
+================================================================================
+6. ARCHITECTURE TECHNIQUE
+================================================================================
+
+6.1 Architecture globale
+  Client – Serveur – Base de données
+
+6.2 Stack technologique
+
+  Frontend        : HTML, CSS (Tailwind), JavaScript
+  Backend         : Node.js ou Laravel
+  Base de données : MySQL
+  API de paiement : MTN Mobile Money, Moov Money, Celtiis
+
+================================================================================
+7. SÉCURITÉ DU SYSTÈME
+================================================================================
+
+  - Authentification sécurisée
+  - Gestion des rôles
+  - Protection des données
+  - Chiffrement des mots de passe
+  - Contrôle d'accès
+
+================================================================================
+8. MODÈLE ÉCONOMIQUE
+================================================================================
+
+  - Commissions sur ventes
+  - Abonnements artisans
+  - Publicité
+  - Produits sponsorisés
+  - Services de personnalisation
+
+================================================================================
+9. PLANNING DE RÉALISATION
+================================================================================
+
+  Phase 1 : Analyse des besoins
+  Phase 2 : Conception (maquettes, modèle de données)
+  Phase 3 : Développement
+  Phase 4 : Tests et corrections
+  Phase 5 : Déploiement
+  Phase 6 : Documentation et rapport
+
+================================================================================
+10. RÉSULTATS ATTENDUS
+================================================================================
+
+À la fin du projet :
+  - Les artisans pourront vendre leurs produits en ligne
+  - Les clients pourront commander facilement
+  - Les produits locaux seront mieux valorisés
+  - Le commerce artisanal sera modernisé
+
+================================================================================
+11. LIVRABLES
+================================================================================
+
+  - Cahier des charges
+  - Maquettes
+  - Base de données
+  - Code source
+  - Application web
+  - Rapport de soutenance
+
+================================================================================
+12. CONTRAINTES
+================================================================================
+
+Techniques
+  - Faible connexion internet
+  - Optimisation mobile
+  - Appareils limités
+
+Utilisateurs
+  - Faible niveau numérique
+  - Besoin d'interface simple
+
+Académiques
+  - Respect du format de soutenance
+  - Documentation complète
+
+================================================================================
+CONCLUSION
+================================================================================
+
+Le projet ArtisanMarket vise à digitaliser et structurer le marché de l'artisanat béninois en
+proposant une plateforme moderne et adaptée au contexte local. Il permet de valoriser le
+kanvô, les tenues tricotées et les accessoires traditionnels tout en facilitant leur
+commercialisation et leur accessibilité.
+
+Nom et Prénoms des étudiantes : ABOUTA Gloria / DOGNON Marie-Suzanne
+Encadrant                     : Maître de Stage — IUT de Parakou
+Niveau / Établissement        : Licence 3 — IUT Parakou, Bénin

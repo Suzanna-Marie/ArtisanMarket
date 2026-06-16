@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Cache la scrollbar sur mobile tout en gardant le scroll fonctionnel */
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Cache le bouton "reveal password" natif Edge/Chrome qui masque notre icône oeil */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button { display: none; }
+
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;          /* blanc pur */
+    --foreground: 222 47% 11%;        /* gris très foncé */
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+    --border: 220 13% 91%;            /* gris-200 */
+    --input: 220 13% 95%;             /* gris très clair pour inputs */
+    --ring: 122 59% 26%;              /* vert foret */
+    --radius: 0.75rem;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-white text-foreground font-sans antialiased;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans tracking-tight;
+  }
+}
+
+@layer components {
+  .btn-primaire {
+    @apply bg-foret text-white font-semibold px-6 py-3 rounded-xl hover:bg-foret-clair active:scale-95 transition-all duration-200 shadow-sm;
+  }
+
+  .btn-secondaire {
+    @apply border-2 border-foret text-foret font-semibold px-6 py-3 rounded-xl hover:bg-foret hover:text-white active:scale-95 transition-all duration-200;
+  }
+
+  .carte-produit {
+    @apply bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden border border-gray-100;
+  }
+
+  .skeleton {
+    @apply animate-pulse bg-gray-200 rounded;
+  }
+
+  .badge-categorie {
+    @apply bg-foret/10 text-foret text-xs font-semibold px-2.5 py-1 rounded-full;
+  }
+
+  .titre-section {
+    @apply text-2xl font-bold text-foreground mb-2;
+  }
+
+  .sous-titre {
+    @apply text-gray-500 text-sm;
+  }
+}

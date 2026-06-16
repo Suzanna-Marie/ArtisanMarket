@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la \"c:\\\\\\\\Users\\\\\\\\marie-suzanne\\\\\\\\\" | grep -i artisan)",
+      "Read(//c/Users/marie-suzanne/**)",
+      "Bash(mkdir -p \"c:/Users/marie-suzanne/OneDrive/Documents/artisan market/frontend/app/\\(public\\)/produits/[id]\" && echo \"ok\")"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\marie-suzanne\\OneDrive\\Documents\\artisan market\\frontend\\app\\(public)\\produits"
+    ]
+  }
+}
