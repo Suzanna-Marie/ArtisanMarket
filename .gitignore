@@ -1,4 +1,7 @@
-﻿# Dépendances
+﻿# Claude Code (interne, ne pas pousser)
+.claude/
+
+# Dépendances
 node_modules/
 
 # Variables d'environnement (SECRETS)
@@ -20,3 +23,4 @@ Thumbs.db
 
 # TypeScript
 tsconfig.tsbuildinfo
+
