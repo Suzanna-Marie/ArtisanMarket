@@ -293,6 +293,10 @@ export default function Profil() {
             {chargement && <Loader2 className="w-4 h-4 animate-spin" />}
             Modifier le mot de passe
           </button>
+          <p className="text-center text-sm text-muted-foreground">
+            Vous avez oublié votre mot de passe ?{' '}
+            <a href="/mot-de-passe-oublie" className="text-or hover:underline font-medium">Réinitialiser</a>
+          </p>
         </form>
       )}
     </div>
