@@ -57,7 +57,7 @@ export default function KKiapaySimulateur({ montant, onConfirmer, onFermer }: Pr
             <p className="text-white font-bold text-base">Paiement Mobile Money</p>
             <p className="text-white/70 text-xs">Sécurisé · Instantané</p>
           </div>
-          {etape === 'choix' && (
+          {etape !== 'chargement' && (
             <button onClick={onFermer} className="text-white/70 hover:text-white transition-colors">
               <X className="w-5 h-5" />
             </button>
@@ -135,7 +135,13 @@ export default function KKiapaySimulateur({ montant, onConfirmer, onFermer }: Pr
             <div className="text-center py-4">
               <CheckCircle className="w-12 h-12 text-green-500 mx-auto mb-3" />
               <p className="font-bold text-gray-800 mb-1">Paiement confirmé !</p>
-              <p className="text-sm text-gray-500">Votre commande est en cours de préparation.</p>
+              <p className="text-sm text-gray-500 mb-5">Votre commande est en cours de préparation.</p>
+              <button
+                onClick={onFermer}
+                className="w-full bg-[#2D5016] text-white rounded-xl py-3 font-semibold text-sm hover:bg-[#2D5016]/90 transition-colors"
+              >
+                Fermer
+              </button>
             </div>
           )}
         </div>
