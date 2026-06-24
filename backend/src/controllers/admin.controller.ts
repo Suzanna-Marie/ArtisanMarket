@@ -372,3 +372,70 @@ export const libererFonds = async (req: AuthRequest, res: Response) => {
   }
 }
 
+export const notificationsAdmin = async (_req: AuthRequest, res: Response) => {
+  const il7Jours = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  try {
+    const [nouveauxUsers, nouveauxProduits, nouveauxLitiges, artisansEnAttente] = await Promise.all([
+      prisma.user.findMany({
+        where: { role: 'CLIENT', createdAt: { gte: il7Jours } },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+        select: { id: true, prenom: true, nom: true, createdAt: true },
+      }),
+      prisma.produit.findMany({
+        where: { statut: 'PUBLIE', createdAt: { gte: il7Jours } },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+        select: { id: true, titre: true, createdAt: true },
+      }),
+      prisma.litige.findMany({
+        where: { createdAt: { gte: il7Jours } },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+        select: { id: true, motif: true, createdAt: true },
+      }),
+      prisma.artisan.findMany({
+        where: { statut: 'EN_ATTENTE' },
+        orderBy: { createdAt: 'desc' },
+        take: 10,
+        select: { id: true, nomBoutique: true, createdAt: true },
+      }),
+    ])
+
+    const notifications = [
+      ...artisansEnAttente.map(a => ({
+        id: `artisan-${a.id}`,
+        type: 'ARTISAN',
+        message: `Nouvelle demande artisan : ${a.nomBoutique}`,
+        date: a.createdAt,
+        lien: '/dashboard/artisans',
+      })),
+      ...nouveauxLitiges.map(l => ({
+        id: `litige-${l.id}`,
+        type: 'LITIGE',
+        message: `Nouveau litige : ${l.motif}`,
+        date: l.createdAt,
+        lien: '/dashboard/litiges',
+      })),
+      ...nouveauxUsers.map(u => ({
+        id: `user-${u.id}`,
+        type: 'USER',
+        message: `Nouvel utilisateur : ${u.prenom} ${u.nom}`,
+        date: u.createdAt,
+        lien: '/dashboard/utilisateurs',
+      })),
+      ...nouveauxProduits.map(p => ({
+        id: `produit-${p.id}`,
+        type: 'PRODUIT',
+        message: `Nouveau produit publié : ${p.titre}`,
+        date: p.createdAt,
+        lien: '/dashboard/produits',
+      })),
+    ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+
+    return res.json({ notifications, total: notifications.length })
+  } catch {
+    return res.status(500).json({ message: 'Erreur serveur.' })
+  }
+}
+
