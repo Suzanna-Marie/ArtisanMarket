@@ -9,7 +9,7 @@ import { envoyerCodeVerification, envoyerCodeReinitialisation } from '../service
 const prisma = new PrismaClient()
 
 const genererToken = (id: number, email: string, role: Role): string => {
-  const options: SignOptions = { expiresIn: '24h' }
+  const options: SignOptions = { expiresIn: '7d' }
   return jwt.sign({ id, email, role }, process.env.JWT_SECRET!, options)
 }
 
@@ -65,7 +65,7 @@ export const inscription = async (req: Request, res: Response) => {
     try {
       await envoyerCodeVerification(email, prenom, code)
     } catch (emailErr) {
-      console.warn(`\n⚠️  Email non envoyé (SMTP non configuré)`)
+      console.warn(`\n⚠️  Email non envoyé — erreur SMTP :`, emailErr)
       console.warn(`📧  Code de vérification pour ${email} : \x1b[33m${code}\x1b[0m\n`)
     }
 
@@ -156,7 +156,7 @@ export const renvoyerCode = async (req: Request, res: Response) => {
     try {
       await envoyerCodeVerification(email, user.prenom, code)
     } catch (emailErr) {
-      console.warn(`\n⚠️  Email non envoyé (SMTP non configuré)`)
+      console.warn(`\n⚠️  Email non envoyé — erreur SMTP :`, emailErr)
       console.warn(`📧  Nouveau code pour ${email} : \x1b[33m${code}\x1b[0m\n`)
     }
 
@@ -271,8 +271,8 @@ export const demanderReinitialisationMdp = async (req: Request, res: Response) =
 
     try {
       await envoyerCodeReinitialisation(email, user.prenom, code)
-    } catch {
-      console.warn(`\n⚠️  Email non envoyé (SMTP non configuré)`)
+    } catch (emailErr) {
+      console.warn(`\n⚠️  Email non envoyé — erreur SMTP :`, emailErr)
       console.warn(`🔑  Code réinitialisation pour ${email} : \x1b[33m${code}\x1b[0m\n`)
     }
 

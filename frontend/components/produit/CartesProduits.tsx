@@ -129,15 +129,10 @@ export default function CartesProduits({ params, produits: produitsProp, chargem
                 <Heart className="w-3.5 h-3.5 text-gray-400 hover:text-red-500 transition-colors" />
               </button>
 
-              {/* Badges stock */}
+              {/* Badge rupture */}
               {rupture && (
                 <span className="absolute bottom-3 left-3 bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
                   Rupture de stock
-                </span>
-              )}
-              {stockFaible && (
-                <span className="absolute bottom-3 left-3 bg-amber-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm">
-                  Plus que {produit.quantite} !
                 </span>
               )}
             </Link>
@@ -181,10 +176,19 @@ export default function CartesProduits({ params, produits: produitsProp, chargem
               </div>
 
               {/* Prix */}
-              <p className="text-base font-bold text-foret mb-3">
+              <p className="text-base font-bold text-foret mb-2">
                 {Number(produit.prix).toLocaleString('fr-BJ')}
                 <span className="text-xs font-normal text-gray-400 ml-1">FCFA</span>
               </p>
+
+              {/* Stock */}
+              {rupture ? (
+                <p className="text-[11px] font-medium text-red-500 mb-2">Rupture de stock</p>
+              ) : stockFaible ? (
+                <p className="text-[11px] font-medium text-amber-500 mb-2">Plus que {produit.quantite} en stock</p>
+              ) : (
+                <p className="text-[11px] font-medium text-green-600 mb-2">{produit.quantite} en stock</p>
+              )}
 
               {/* CTA */}
               {monProduit ? (

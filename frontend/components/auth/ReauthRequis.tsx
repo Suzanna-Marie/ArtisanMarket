@@ -9,7 +9,7 @@ const REAUTH_KEY = 'reauth_ts'
 const REAUTH_DUREE = 30 * 60 * 1000 // valide 30 minutes après confirmation
 
 export default function ReauthRequis({ children, message }: { children: React.ReactNode; message?: string }) {
-  const { user } = useAuthStore()
+  const { user, setAuth } = useAuthStore()
   const [ok, setOk] = useState(false)
   const [mdp, setMdp] = useState('')
   const [erreur, setErreur] = useState('')
@@ -28,7 +28,8 @@ export default function ReauthRequis({ children, message }: { children: React.Re
     if (!mdp.trim()) { setErreur('Entrez votre mot de passe.'); return }
     setChargement(true)
     try {
-      await connexion({ email: user?.email, password: mdp })
+      const res = await connexion({ email: user?.email, password: mdp })
+      setAuth(res.data.user, res.data.token)
       sessionStorage.setItem(REAUTH_KEY, Date.now().toString())
       setOk(true)
     } catch {

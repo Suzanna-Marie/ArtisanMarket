@@ -333,9 +333,6 @@ export const confirmerReception = async (req: AuthRequest, res: Response) => {
 }
 
 export const simulerPaiement = async (req: AuthRequest, res: Response) => {
-  if (process.env.NODE_ENV === 'production') {
-    return res.status(403).json({ message: 'Simulation non disponible en production.' })
-  }
   try {
     const commandeActuelle = await prisma.commande.findUnique({
       where: { id: Number(req.params.id) },

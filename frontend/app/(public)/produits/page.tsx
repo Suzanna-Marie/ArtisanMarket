@@ -213,7 +213,7 @@ function CatalogueProduits() {
                           <span className="text-xs text-muted-foreground">({produit._count.avis} avis)</span>
                         </div>
                       )}
-                      <div className="flex items-center justify-between">
+                      <div className="flex items-center justify-between mb-1">
                         <span className="font-bold text-or">{Number(produit.prix).toLocaleString('fr-FR')} FCFA</span>
                         {produit.statut === 'EN_RUPTURE' ? (
                           <span className="text-xs text-red-500 font-medium">Indisponible</span>
@@ -229,6 +229,11 @@ function CatalogueProduits() {
                           </button>
                         )}
                       </div>
+                      {produit.statut !== 'EN_RUPTURE' && (
+                        <p className={`text-[11px] font-medium ${produit.quantite <= 5 ? 'text-amber-500' : 'text-green-600'}`}>
+                          {produit.quantite <= 5 ? `Plus que ${produit.quantite} en stock` : `${produit.quantite} en stock`}
+                        </p>
+                      )}
                     </div>
                   </div>
                 ))}

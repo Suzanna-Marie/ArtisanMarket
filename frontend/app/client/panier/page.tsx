@@ -38,6 +38,7 @@ function WrappedPagePanier() {
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       toast(msg || 'Erreur lors du paiement.', 'error')
+      throw err
     } finally {
       setCommandeEnCours(false)
     }
