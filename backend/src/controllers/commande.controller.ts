@@ -36,6 +36,7 @@ export const passerCommande = async (req: AuthRequest, res: Response) => {
       include: { articles: { include: { produit: true } } }
     })
 
+    console.log(`[passerCommande] commandeId=${commande.id} clientId=${commande.clientId} userId=${req.user!.id} role=${req.user!.role} nbArticles=${commande.articles.length}`)
     return res.status(201).json(commande)
   } catch (error) {
     return res.status(500).json({ message: 'Erreur serveur.' })
@@ -340,8 +341,10 @@ export const simulerPaiement = async (req: AuthRequest, res: Response) => {
     const commandeActuelle = await prisma.commande.findUnique({
       where: { id: Number(req.params.id) },
     })
+    console.log(`[simulerPaiement] commandeId=${req.params.id} clientId=${commandeActuelle?.clientId} userId=${req.user?.id} role=${req.user?.role}`)
     if (!commandeActuelle) return res.status(404).json({ message: 'Commande introuvable.' })
     if (commandeActuelle.clientId !== req.user!.id) {
+      console.log(`[simulerPaiement] ACCES REFUSE: clientId=${commandeActuelle.clientId} !== userId=${req.user!.id}`)
       return res.status(403).json({ message: 'Accès refusé.' })
     }
     if (commandeActuelle.paiementStatut === 'paye') {
