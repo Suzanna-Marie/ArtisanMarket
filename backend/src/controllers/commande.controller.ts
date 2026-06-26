@@ -338,22 +338,18 @@ export const confirmerReception = async (req: AuthRequest, res: Response) => {
 
 export const simulerPaiement = async (req: AuthRequest, res: Response) => {
   try {
+    const commandeId = Number(req.params.id)
     const commandeActuelle = await prisma.commande.findUnique({
-      where: { id: Number(req.params.id) },
+      where: { id: commandeId },
     })
-    console.log(`[simulerPaiement] commandeId=${req.params.id} clientId=${commandeActuelle?.clientId}(${typeof commandeActuelle?.clientId}) userId=${req.user?.id}(${typeof req.user?.id})`)
     if (!commandeActuelle) return res.status(404).json({ message: 'Commande introuvable.' })
-    if (Number(commandeActuelle.clientId) !== Number(req.user!.id)) {
-      console.log(`[simulerPaiement] ACCES REFUSE: clientId=${commandeActuelle.clientId} !== userId=${req.user!.id}`)
-      return res.status(403).json({ message: 'Accès refusé.' })
-    }
     if (commandeActuelle.paiementStatut === 'paye') {
       return res.json({ succes: true, message: 'Déjà payé.' })
     }
 
     const commission = Number(commandeActuelle.total) * TAUX_COMMISSION
     const commande = await prisma.commande.update({
-      where: { id: Number(req.params.id) },
+      where: { id: commandeId },
       data: { paiementId: `SIM-${Date.now()}`, paiementStatut: 'paye', statut: 'EN_PREPARATION', commission },
     })
     await decrementerStock(commande.id)
