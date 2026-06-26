@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 interface User {
   id: number
@@ -58,36 +59,41 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
   isAuthenticated: () => !!get().token,
 }))
 
-export const usePanierStore = create<PanierStore>((set, get) => ({
-  articles: [],
+export const usePanierStore = create<PanierStore>()(
+  persist(
+    (set, get) => ({
+      articles: [],
 
-  ajouterArticle: (article) => {
-    set((state) => {
-      const existant = state.articles.find(a => a.produitId === article.produitId)
-      if (existant) {
-        return {
-          articles: state.articles.map(a =>
-            a.produitId === article.produitId
-              ? { ...a, quantite: a.quantite + article.quantite }
-              : a
-          )
-        }
-      }
-      return { articles: [...state.articles, article] }
-    })
-  },
+      ajouterArticle: (article) => {
+        set((state) => {
+          const existant = state.articles.find(a => a.produitId === article.produitId)
+          if (existant) {
+            return {
+              articles: state.articles.map(a =>
+                a.produitId === article.produitId
+                  ? { ...a, quantite: a.quantite + article.quantite }
+                  : a
+              )
+            }
+          }
+          return { articles: [...state.articles, article] }
+        })
+      },
 
-  retirerArticle: (produitId) =>
-    set((state) => ({ articles: state.articles.filter(a => a.produitId !== produitId) })),
+      retirerArticle: (produitId) =>
+        set((state) => ({ articles: state.articles.filter(a => a.produitId !== produitId) })),
 
-  modifierQuantite: (produitId, quantite) =>
-    set((state) => ({
-      articles: state.articles.map(a => a.produitId === produitId ? { ...a, quantite } : a)
-    })),
+      modifierQuantite: (produitId, quantite) =>
+        set((state) => ({
+          articles: state.articles.map(a => a.produitId === produitId ? { ...a, quantite } : a)
+        })),
 
-  viderPanier: () => set({ articles: [] }),
+      viderPanier: () => set({ articles: [] }),
 
-  total: () => get().articles.reduce((sum, a) => sum + a.prix * a.quantite, 0),
+      total: () => get().articles.reduce((sum, a) => sum + a.prix * a.quantite, 0),
 
-  nbArticles: () => get().articles.reduce((sum, a) => sum + a.quantite, 0),
-}))
+      nbArticles: () => get().articles.reduce((sum, a) => sum + a.quantite, 0),
+    }),
+    { name: 'artisanmarket-panier' }
+  )
+)

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import { ShoppingCart, Heart, Star, MapPin, Clock, Palette, ArrowLeft, MessageCircle, Send } from 'lucide-react'
+import { ShoppingCart, Heart, Star, MapPin, Clock, Palette, ArrowLeft, MessageCircle, Send, Package } from 'lucide-react'
 import { obtenirProduit, toggleFavori, ajouterAvis } from '@/lib/api'
 import { usePanierStore, useAuthStore } from '@/lib/store'
 import { toast } from '@/components/ui/toaster'
@@ -34,6 +34,7 @@ export default function FicheProduit() {
   const [commentaireForm, setCommentaireForm] = useState('')
   const [envoiAvis, setEnvoiAvis] = useState(false)
   const ajouterArticle = usePanierStore(s => s.ajouterArticle)
+  const articlesPanier = usePanierStore(s => s.articles)
   const { user } = useAuthStore()
 
   useEffect(() => {
@@ -64,6 +65,16 @@ export default function FicheProduit() {
 
   const handleAjouterPanier = () => {
     if (!produit) return
+    const enPanier = articlesPanier.find(a => a.produitId === produit.id)?.quantite || 0
+    if (enPanier + quantite > produit.quantite) {
+      const restant = produit.quantite - enPanier
+      if (restant <= 0) {
+        toast('Vous avez déjà tout le stock disponible dans votre panier.', 'error')
+      } else {
+        toast(`Seulement ${restant} de plus disponible${restant > 1 ? 's' : ''} (déjà ${enPanier} en panier).`, 'error')
+      }
+      return
+    }
     ajouterArticle({
       produitId: produit.id, titre: produit.titre,
       prix: Number(produit.prix), photo: produit.photos?.[0] || '',

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Heart, Star, ShoppingCart, Plus, MapPin } from 'lucide-react'
 import { listerProduits } from '@/lib/api'
 import { usePanierStore, useAuthStore } from '@/lib/store'
+import { toast } from '@/components/ui/toaster'
 
 interface Produit {
   id: number
@@ -44,6 +45,7 @@ export default function CartesProduits({ params, produits: produitsProp, chargem
   const [produits, setProduits]   = useState<Produit[]>(produitsProp || [])
   const [chargement, setChargement] = useState(chargementProp ?? true)
   const ajouterArticle = usePanierStore(s => s.ajouterArticle)
+  const articlesPanier = usePanierStore(s => s.articles)
   const { user }       = useAuthStore()
 
   useEffect(() => {
@@ -201,14 +203,22 @@ export default function CartesProduits({ params, produits: produitsProp, chargem
                 </div>
               ) : (
                 <button
-                  onClick={() => ajouterArticle({
-                    produitId: produit.id,
-                    titre: produit.titre,
-                    prix: Number(produit.prix),
-                    photo: produit.photos?.[0] || '',
-                    quantite: 1,
-                    artisanNom: produit.artisan?.nomBoutique,
-                  })}
+                  onClick={() => {
+                    const enPanier = articlesPanier.find(a => a.produitId === produit.id)?.quantite || 0
+                    if (enPanier >= produit.quantite) {
+                      toast(`Stock maximum atteint (${produit.quantite} disponible${produit.quantite > 1 ? 's' : ''})`, 'error')
+                      return
+                    }
+                    ajouterArticle({
+                      produitId: produit.id,
+                      titre: produit.titre,
+                      prix: Number(produit.prix),
+                      photo: produit.photos?.[0] || '',
+                      quantite: 1,
+                      artisanNom: produit.artisan?.nomBoutique,
+                    })
+                    toast('Ajouté au panier !', 'success')
+                  }}
                   className="w-full flex items-center justify-center gap-2 bg-foret text-white text-xs font-semibold py-2.5 rounded-xl hover:bg-foret-clair active:scale-95 transition-all duration-200 shadow-sm">
                   <Plus className="w-3.5 h-3.5" />
                   Ajouter au panier

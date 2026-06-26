@@ -3,18 +3,10 @@ import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeft, Check, ThumbsUp, ThumbsDown, CreditCard, AlertTriangle, Package } from 'lucide-react'
-import { obtenirCommande, repondreDevis, verifierPaiement, simulerPaiement, ouvrirLitige, confirmerReception } from '@/lib/api'
+import { obtenirCommande, repondreDevis, simulerPaiement, ouvrirLitige, confirmerReception } from '@/lib/api'
 import { useAuthStore } from '@/lib/store'
 import { toast } from '@/components/ui/toaster'
 import KKiapaySimulateur from '@/components/ui/kkiapay-simulateur'
-
-declare global {
-  interface Window {
-    openKkiapayWidget: (options: Record<string, unknown>) => void
-    addSuccessListener: (fn: (response: { transactionId: string }) => void) => void
-    addFailedListener: (fn: (response: unknown) => void) => void
-  }
-}
 
 const ETAPES = [
   { statut: 'RECUE', label: 'Commande reçue' },
@@ -90,39 +82,6 @@ export default function DetailCommande() {
       toast('Erreur, réessayez.', 'error')
     } finally {
       setEnvoi(false)
-    }
-  }
-
-  const handlePayer = () => {
-    if (!commande || !user) return
-
-    const ouvrirWidget = () => {
-      window.openKkiapayWidget({
-        amount: Math.round(Number(commande.devisPrix || commande.total)),
-        api_key: process.env.NEXT_PUBLIC_KKIAPAY_PUBLIC_KEY,
-        sandbox: false,
-        name: 'ArtisanMarket',
-        phone: user.telephone || '',
-      })
-      window.addSuccessListener(async (response) => {
-        try {
-          await verifierPaiement(commande.id, response.transactionId)
-          toast('Paiement confirmé !', 'success')
-          charger()
-        } catch {
-          toast('Erreur lors de la vérification du paiement.', 'error')
-        }
-      })
-      window.addFailedListener(() => toast('Paiement échoué ou annulé.', 'error'))
-    }
-
-    if (window.openKkiapayWidget) {
-      ouvrirWidget()
-    } else {
-      const script = document.createElement('script')
-      script.src = 'https://cdn.kkiapay.me/k.js'
-      script.onload = ouvrirWidget
-      document.body.appendChild(script)
     }
   }
 

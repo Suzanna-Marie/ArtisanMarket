@@ -1,5 +1,4 @@
 'use client'
-import ReauthRequis from '@/components/auth/ReauthRequis'
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -25,11 +24,12 @@ function WrappedPagePanier() {
 
   const handleConfirmerPaiement = async (telephone: string, reseau: string) => {
     setCommandeEnCours(true)
+    let commandeId: number | null = null
     try {
       const res = await passerCommande({
         articles: articles.map(a => ({ produitId: a.produitId, quantite: a.quantite })),
       })
-      const commandeId = res.data.id
+      commandeId = res.data.id
       await simulerPaiement(commandeId)
       viderPanier()
       setModalVisible(false)
@@ -38,7 +38,14 @@ function WrappedPagePanier() {
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       toast(msg || 'Erreur lors du paiement.', 'error')
-      throw err
+      if (commandeId) {
+        // Commande créée mais paiement échoué → rediriger pour réessayer
+        viderPanier()
+        setModalVisible(false)
+        router.push(`/client/commandes/${commandeId}`)
+      } else {
+        throw err
+      }
     } finally {
       setCommandeEnCours(false)
     }
@@ -132,5 +139,5 @@ function WrappedPagePanier() {
 }
 
 export default function PagePanier() {
-  return <ReauthRequis message="Pour procéder au paiement, confirmez votre identité."><WrappedPagePanier /></ReauthRequis>
+  return <WrappedPagePanier />
 }

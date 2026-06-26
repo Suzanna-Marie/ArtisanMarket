@@ -28,6 +28,7 @@ function CatalogueProduits() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const ajouterArticle = usePanierStore(s => s.ajouterArticle)
+  const articlesPanier = usePanierStore(s => s.articles)
 
   const [produits, setProduits] = useState<Produit[]>([])
   const [categories, setCategories] = useState<Categorie[]>([])
@@ -220,6 +221,11 @@ function CatalogueProduits() {
                         ) : (
                           <button
                             onClick={() => {
+                              const enPanier = articlesPanier.find(a => a.produitId === produit.id)?.quantite || 0
+                              if (enPanier >= produit.quantite) {
+                                toast(`Stock maximum atteint (${produit.quantite} disponible${produit.quantite > 1 ? 's' : ''})`, 'error')
+                                return
+                              }
                               ajouterArticle({ produitId: produit.id, titre: produit.titre, prix: Number(produit.prix), photo: produit.photos?.[0] || '', quantite: 1, artisanNom: produit.artisan?.nomBoutique })
                               toast('Ajouté au panier !', 'success')
                             }}
