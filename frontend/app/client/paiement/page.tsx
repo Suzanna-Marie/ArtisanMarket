@@ -312,7 +312,7 @@ export default function PagePaiement() {
             <div className="flex flex-col gap-3">
               <button onClick={handleFermer}
                 className="w-full bg-[#2D5016] text-white py-3.5 rounded-xl font-bold text-sm hover:bg-[#2D5016]/90 transition-colors">
-                Fermer et vider le panier
+                Fermer
               </button>
               <button onClick={() => { viderPanier(); router.push(`/client/commandes/${commandeId}`) }}
                 className="w-full py-3 rounded-xl border border-foret text-foret font-medium text-sm hover:bg-foret/5 transition-colors">
