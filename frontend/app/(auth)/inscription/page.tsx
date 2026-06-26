@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -48,7 +49,7 @@ const avantages = [
   { icone: <Star className="w-5 h-5" />, texte: 'Commandes sur mesure disponibles' },
 ]
 
-export default function PageInscription() {
+function InscriptionContent() {
   const params = useSearchParams()
   const [role, setRole] = useState<'CLIENT' | 'ARTISAN'>(
     (params.get('role') as 'CLIENT' | 'ARTISAN') || 'CLIENT'
@@ -402,4 +403,8 @@ export default function PageInscription() {
 
     </div>
   )
+}
+
+export default function PageInscription() {
+  return <Suspense><InscriptionContent /></Suspense>
 }

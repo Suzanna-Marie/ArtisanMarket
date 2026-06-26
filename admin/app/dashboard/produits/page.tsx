@@ -65,8 +65,8 @@ export default function PageProduits() {
         </select>
       </div>
 
-      <div className="card overflow-hidden">
-        <table className="w-full text-sm">
+      <div className="card overflow-hidden overflow-x-auto">
+        <table className="w-full text-sm min-w-[500px]">
           <thead>
             <tr className="border-b border-slate-100 bg-slate-50">
               <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Produit</th>
@@ -106,7 +106,7 @@ export default function PageProduits() {
                 </td>
                 <td className="px-5 py-3 text-slate-600 hidden md:table-cell">{p.artisan?.nomBoutique}</td>
                 <td className="px-5 py-3 text-slate-600 hidden lg:table-cell">{p.categorie?.nom}</td>
-                <td className="px-5 py-3 font-medium text-or">{Number(p.prix).toLocaleString('fr-FR')} F</td>
+                <td className="px-5 py-3 font-medium text-or whitespace-nowrap">{Number(p.prix).toLocaleString('fr-FR')} F</td>
                 <td className="px-5 py-3">
                   <span className={`badge ${STATUT[p.statut]?.classe || 'bg-slate-100 text-slate-500'}`}>
                     {STATUT[p.statut]?.label || p.statut}

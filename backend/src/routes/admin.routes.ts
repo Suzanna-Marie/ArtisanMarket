@@ -33,6 +33,9 @@ router.delete('/produits/:id', adminController.supprimerProduit)
 router.get('/commandes/fonds-a-liberer', adminController.commandesFondsALiberer)
 router.put('/commandes/:id/liberer-fonds', adminController.libererFonds)
 
+// Notifications
+router.get('/notifications', adminController.notificationsAdmin)
+
 // Avis
 router.get('/avis', adminController.tousLesAvis)
 router.delete('/avis/:id', adminController.supprimerAvis)

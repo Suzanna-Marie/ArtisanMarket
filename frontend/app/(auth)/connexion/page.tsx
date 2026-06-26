@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useState } from 'react'
@@ -9,7 +10,7 @@ import { useAuthStore } from '@/lib/store'
 
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/
 
-export default function PageConnexion() {
+function ConnexionContent() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [erreurs, setErreurs] = useState({ email: '', password: '' })
   const [voirMdp, setVoirMdp] = useState(false)
@@ -206,4 +207,8 @@ export default function PageConnexion() {
 
     </div>
   )
+}
+
+export default function PageConnexion() {
+  return <Suspense><ConnexionContent /></Suspense>
 }

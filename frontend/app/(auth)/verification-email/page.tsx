@@ -1,4 +1,5 @@
 'use client'
+import { Suspense } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -6,7 +7,7 @@ import { Loader2, Mail, CheckCircle2, RefreshCw } from 'lucide-react'
 import { verifierEmail, renvoyerCode } from '@/lib/api'
 import { useAuthStore } from '@/lib/store'
 
-export default function VerificationEmail() {
+function VerificationEmailContent() {
   const searchParams = useSearchParams()
   const email = searchParams.get('email') || ''
   const router = useRouter()
@@ -228,4 +229,8 @@ export default function VerificationEmail() {
       </div>
     </div>
   )
+}
+
+export default function VerificationEmail() {
+  return <Suspense><VerificationEmailContent /></Suspense>
 }

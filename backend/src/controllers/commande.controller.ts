@@ -249,8 +249,11 @@ async function decrementerStock(commandeId: number) {
     include: { produit: true },
   })
 
+  console.log(`[stock] commande ${commandeId} — ${articles.length} article(s) à décrémenter`)
+
   for (const article of articles) {
     const nouvelleQuantite = Math.max(0, article.produit.quantite - article.quantite)
+    console.log(`[stock] produit ${article.produitId}: ${article.produit.quantite} → ${nouvelleQuantite}`)
     await prisma.produit.update({
       where: { id: article.produitId },
       data: {

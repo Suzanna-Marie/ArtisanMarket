@@ -130,7 +130,7 @@ export default function DashboardPage() {
         <div className="card p-5 border-l-4 border-foret">
           <div className="flex items-center gap-2 mb-1">
             <Banknote className="w-4 h-4 text-foret" />
-            <p className="text-xs text-slate-500 font-medium">Commissions perçues (2%)</p>
+            <p className="text-xs text-slate-500 font-medium">Commissions perçues (10%)</p>
           </div>
           {chargement ? <div className="skeleton h-8 w-32" /> : (
             <p className="text-2xl font-bold text-foret">

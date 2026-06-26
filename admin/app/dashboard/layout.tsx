@@ -15,6 +15,7 @@ const NAV = [
   { href: '/dashboard/litiges',               label: 'Litiges',            icone: AlertTriangle },
   { href: '/dashboard/avis',                  label: 'Avis clients',       icone: Star },
   { href: '/dashboard/messages-contact',      label: 'Messages contact',   icone: MessageSquare },
+  { href: '/dashboard/notifications',         label: 'Notifications',      icone: Bell },
 ]
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -127,12 +128,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </h2>
           </div>
           <div className="flex items-center gap-3 ml-auto">
-            <button className="relative p-2 rounded-xl hover:bg-slate-100 text-slate-500">
+            <Link href="/dashboard/notifications" className="relative p-2 rounded-xl hover:bg-slate-100 text-slate-500">
               <Bell className="w-5 h-5" />
-            </button>
-            <div className="w-9 h-9 rounded-full bg-foret flex items-center justify-center text-white text-xs font-bold shrink-0">
+            </Link>
+            <Link href="/dashboard/profil" className="w-9 h-9 rounded-full bg-foret flex items-center justify-center text-white text-xs font-bold shrink-0 hover:bg-foret/80 transition-colors">
               {user.prenom?.[0]}{user.nom?.[0]}
-            </div>
+            </Link>
           </div>
         </header>
 

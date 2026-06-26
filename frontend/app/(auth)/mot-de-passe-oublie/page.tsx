@@ -91,7 +91,7 @@ export default function PageMotDePasseOublie() {
           {etape !== 'succes' && (
             <div className="flex items-center gap-2 mb-6">
               <div className={`flex-1 h-1 rounded-full ${etape === 'email' ? 'bg-or' : 'bg-green-500'}`} />
-              <div className={`flex-1 h-1 rounded-full ${etape === 'code' ? 'bg-or' : etape === 'succes' ? 'bg-green-500' : 'bg-creme-fonce'}`} />
+              <div className={`flex-1 h-1 rounded-full ${etape === 'code' ? 'bg-or' : 'bg-creme-fonce'}`} />
             </div>
           )}
 
