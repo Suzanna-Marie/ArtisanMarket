@@ -3,23 +3,67 @@ import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Package } from 'lucide-react'
+import { Trash2, Plus, Minus, ShoppingBag, ArrowRight, Package, Lock, Eye, EyeOff, Loader2, X } from 'lucide-react'
 import { usePanierStore, useAuthStore } from '@/lib/store'
-import { passerCommande, simulerPaiement } from '@/lib/api'
+import { passerCommande, simulerPaiement, connexion } from '@/lib/api'
 import { toast } from '@/components/ui/toaster'
 import KKiapaySimulateur from '@/components/ui/kkiapay-simulateur'
 
-function WrappedPagePanier() {
+const REAUTH_KEY = 'reauth_ts'
+const REAUTH_DUREE = 30 * 60 * 1000 // 30 minutes
+
+type Etape = 'idle' | 'reauth' | 'paiement'
+
+export default function PagePanier() {
   const { articles, retirerArticle, modifierQuantite, viderPanier, total, nbArticles } = usePanierStore()
-  const { user } = useAuthStore()
+  const { user, setAuth } = useAuthStore()
   const router = useRouter()
+
+  const [etape, setEtape] = useState<Etape>('idle')
   const [commandeEnCours, setCommandeEnCours] = useState(false)
-  const [modalVisible, setModalVisible] = useState(false)
+
+  // Champs re-auth
+  const [mdp, setMdp] = useState('')
+  const [voirMdp, setVoirMdp] = useState(false)
+  const [erreurMdp, setErreurMdp] = useState('')
+  const [reauthEnCours, setReauthEnCours] = useState(false)
+
+  const fermerModal = () => {
+    setEtape('idle')
+    setMdp('')
+    setErreurMdp('')
+    setVoirMdp(false)
+  }
 
   const handlePayer = () => {
     if (!user) { router.push('/connexion'); return }
     if (articles.length === 0) return
-    setModalVisible(true)
+    // Vérifier si l'utilisateur s'est ré-authentifié récemment
+    const ts = sessionStorage.getItem(REAUTH_KEY)
+    if (ts && Date.now() - Number(ts) < REAUTH_DUREE) {
+      setEtape('paiement')
+    } else {
+      setEtape('reauth')
+    }
+  }
+
+  const handleReauth = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!mdp.trim()) { setErreurMdp('Entrez votre mot de passe.'); return }
+    setReauthEnCours(true)
+    try {
+      const res = await connexion({ email: user?.email, password: mdp })
+      setAuth(res.data.user, res.data.token)
+      sessionStorage.setItem(REAUTH_KEY, Date.now().toString())
+      setMdp('')
+      setErreurMdp('')
+      setVoirMdp(false)
+      setEtape('paiement')
+    } catch {
+      setErreurMdp('Mot de passe incorrect. Réessayez.')
+    } finally {
+      setReauthEnCours(false)
+    }
   }
 
   const handleConfirmerPaiement = async (telephone: string, reseau: string) => {
@@ -32,16 +76,15 @@ function WrappedPagePanier() {
       commandeId = res.data.id
       await simulerPaiement(commandeId)
       viderPanier()
-      setModalVisible(false)
+      fermerModal()
       toast('Paiement confirmé ! Commande enregistrée.', 'success')
       router.push(`/client/commandes/${commandeId}`)
     } catch (err: unknown) {
       const msg = (err as { response?: { data?: { message?: string } } })?.response?.data?.message
       toast(msg || 'Erreur lors du paiement.', 'error')
       if (commandeId) {
-        // Commande créée mais paiement échoué → rediriger pour réessayer
         viderPanier()
-        setModalVisible(false)
+        fermerModal()
         router.push(`/client/commandes/${commandeId}`)
       } else {
         throw err
@@ -65,13 +108,62 @@ function WrappedPagePanier() {
   return (
     <div className="max-w-5xl mx-auto">
 
-      {modalVisible && (
+      {/* Modal re-authentification */}
+      {etape === 'reauth' && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-sm shadow-2xl overflow-hidden">
+            <div className="bg-[#2D5016] px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <Lock className="w-5 h-5 text-white" />
+                <div>
+                  <p className="text-white font-bold text-base">Confirmez votre identité</p>
+                  <p className="text-white/70 text-xs">Sécurité avant paiement</p>
+                </div>
+              </div>
+              <button onClick={fermerModal} className="text-white/70 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="px-6 py-5">
+              <p className="text-sm text-muted-foreground mb-4 text-center">
+                Pour procéder au paiement, confirmez votre mot de passe.
+              </p>
+              <form onSubmit={handleReauth} className="space-y-4">
+                <div className="relative">
+                  <input
+                    type={voirMdp ? 'text' : 'password'}
+                    value={mdp}
+                    onChange={e => { setMdp(e.target.value); setErreurMdp('') }}
+                    placeholder="Votre mot de passe"
+                    autoFocus
+                    className="w-full px-4 py-3 pr-12 rounded-xl border border-creme-fonce bg-creme focus:outline-none focus:ring-2 focus:ring-or/40 text-sm"
+                  />
+                  <button type="button" onClick={() => setVoirMdp(v => !v)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                    {voirMdp ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
+                {erreurMdp && <p className="text-red-500 text-sm text-center">{erreurMdp}</p>}
+                <button type="submit" disabled={reauthEnCours}
+                  className="w-full bg-[#2D5016] text-white rounded-xl py-3 font-bold text-sm hover:bg-[#2D5016]/90 transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
+                  {reauthEnCours && <Loader2 className="w-4 h-4 animate-spin" />}
+                  {reauthEnCours ? 'Vérification...' : 'Confirmer et payer'}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal paiement KKiaPay */}
+      {etape === 'paiement' && (
         <KKiapaySimulateur
           montant={Math.round(total())}
           onConfirmer={handleConfirmerPaiement}
-          onFermer={() => setModalVisible(false)}
+          onFermer={fermerModal}
         />
       )}
+
       <h1 className="text-2xl font-bold mb-6">Mon panier <span className="text-muted-foreground text-lg font-normal">({nbArticles()} article{nbArticles() > 1 ? 's' : ''})</span></h1>
 
       <div className="grid lg:grid-cols-3 gap-6">
@@ -136,8 +228,4 @@ function WrappedPagePanier() {
       </div>
     </div>
   )
-}
-
-export default function PagePanier() {
-  return <WrappedPagePanier />
 }
