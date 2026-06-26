@@ -131,7 +131,7 @@ export const proposerDevis = async (req: AuthRequest, res: Response) => {
   try {
     const commandeExist = await prisma.commande.findUnique({ where: { id: commandeId }, include: { artisan: true } })
     if (!commandeExist) return res.status(404).json({ message: 'Commande introuvable.' })
-    if (commandeExist.artisan?.userId !== req.user!.id) {
+    if (Number(commandeExist.artisan?.userId) !== Number(req.user!.id)) {
       return res.status(403).json({ message: 'Accès refusé.' })
     }
 
@@ -169,7 +169,7 @@ export const repondreDevis = async (req: AuthRequest, res: Response) => {
   try {
     const commandeExist = await prisma.commande.findUnique({ where: { id: commandeId } })
     if (!commandeExist) return res.status(404).json({ message: 'Commande introuvable.' })
-    if (commandeExist.clientId !== req.user!.id) {
+    if (Number(commandeExist.clientId) !== Number(req.user!.id)) {
       return res.status(403).json({ message: 'Accès refusé.' })
     }
 
@@ -272,7 +272,7 @@ export const verifierPaiement = async (req: AuthRequest, res: Response) => {
       where: { id: Number(req.params.id) },
     })
     if (!commandeActuelle) return res.status(404).json({ message: 'Commande introuvable.' })
-    if (commandeActuelle.clientId !== req.user!.id) {
+    if (Number(commandeActuelle.clientId) !== Number(req.user!.id)) {
       return res.status(403).json({ message: 'Accès refusé.' })
     }
     if (commandeActuelle.paiementStatut === 'paye') {
@@ -306,7 +306,7 @@ export const confirmerReception = async (req: AuthRequest, res: Response) => {
       }
     })
     if (!commande) return res.status(404).json({ message: 'Commande introuvable.' })
-    if (commande.clientId !== req.user!.id) return res.status(403).json({ message: 'Accès refusé.' })
+    if (Number(commande.clientId) !== Number(req.user!.id)) return res.status(403).json({ message: 'Accès refusé.' })
     if (commande.statut !== 'LIVREE') return res.status(400).json({ message: 'La commande n\'est pas encore livrée.' })
     if (commande.receptionConfirmee) return res.json({ message: 'Réception déjà confirmée.' })
 
@@ -341,9 +341,9 @@ export const simulerPaiement = async (req: AuthRequest, res: Response) => {
     const commandeActuelle = await prisma.commande.findUnique({
       where: { id: Number(req.params.id) },
     })
-    console.log(`[simulerPaiement] commandeId=${req.params.id} clientId=${commandeActuelle?.clientId} userId=${req.user?.id} role=${req.user?.role}`)
+    console.log(`[simulerPaiement] commandeId=${req.params.id} clientId=${commandeActuelle?.clientId}(${typeof commandeActuelle?.clientId}) userId=${req.user?.id}(${typeof req.user?.id})`)
     if (!commandeActuelle) return res.status(404).json({ message: 'Commande introuvable.' })
-    if (commandeActuelle.clientId !== req.user!.id) {
+    if (Number(commandeActuelle.clientId) !== Number(req.user!.id)) {
       console.log(`[simulerPaiement] ACCES REFUSE: clientId=${commandeActuelle.clientId} !== userId=${req.user!.id}`)
       return res.status(403).json({ message: 'Accès refusé.' })
     }

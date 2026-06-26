@@ -113,7 +113,7 @@ export const modifierProduit = async (req: AuthRequest, res: Response) => {
       include: { artisan: true }
     })
     if (!produit) return res.status(404).json({ message: 'Produit introuvable.' })
-    if (produit.artisan.userId !== req.user!.id) return res.status(403).json({ message: 'Accès refusé.' })
+    if (Number(produit.artisan.userId) !== Number(req.user!.id)) return res.status(403).json({ message: 'Accès refusé.' })
 
     const photos = files?.length
       ? files.map(f => (f as unknown as { path: string }).path)
@@ -155,7 +155,7 @@ export const supprimerProduit = async (req: AuthRequest, res: Response) => {
     })
     if (!produit) return res.status(404).json({ message: 'Produit introuvable.' })
 
-    if (req.user!.role === 'ARTISAN' && produit.artisan.userId !== req.user!.id) {
+    if (req.user!.role === 'ARTISAN' && Number(produit.artisan.userId) !== Number(req.user!.id)) {
       return res.status(403).json({ message: 'Accès refusé.' })
     }
 
